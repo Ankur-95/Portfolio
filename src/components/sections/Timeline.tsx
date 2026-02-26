@@ -5,39 +5,39 @@ const Timeline = () => {
   const { config } = useSiteConfig();
   if (!config) return null;
 
-  return (
-    <section id="timeline" className="py-24 md:py-32">
-      <div className="container mx-auto px-4 md:px-8">
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            
-            <p className="text-muted-foreground mt-2">Education & milestones</p>
-          </div>
-        </ScrollReveal>
-
-        <div className="max-w-2xl mx-auto relative">
-          {/* Vertical line */}
-          <div className="absolute left-[19px] md:left-1/2 md:-translate-x-px top-0 bottom-0 w-px bg-border" />
-
-          {config.timeline.map((item, i) =>
-          <ScrollReveal key={i} delay={i * 0.1}>
-              <div className={`relative flex items-start gap-6 mb-10 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                {/* Dot */}
-                <div className="absolute left-[15px] md:left-1/2 md:-translate-x-1/2 w-[9px] h-[9px] rounded-full bg-primary border-2 border-background z-10 mt-2" />
-
-                {/* Content */}
-                
+  return;
 
 
 
 
 
-              </div>
-            </ScrollReveal>
-          )}
-        </div>
-      </div>
-    </section>);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 };
 
