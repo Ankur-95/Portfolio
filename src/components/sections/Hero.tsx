@@ -76,9 +76,9 @@ const Hero = () => {
 
                   </Button>
                   <Button variant="outline" asChild>
-                    <a href="#projects">
-                      View Projects
-                    </a>
+                    
+
+
                   </Button>
                 </div>
               </motion.div>
