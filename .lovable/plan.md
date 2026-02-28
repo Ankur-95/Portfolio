@@ -1,39 +1,60 @@
 
 
-# UI Fixes: Hero Buttons, Footer & Contact Cleanup
+# Integrate EmailJS for Contact Form
 
-## 1. Remove "Get in Touch" and "View Projects" buttons from Hero
-**File**: `src/components/sections/Hero.tsx`
-- Delete lines 64-74 (the `<div className="flex flex-wrap justify-center gap-3">` block with both buttons)
-- Also remove the unused `Send` import from lucide-react and `Button` import since they won't be needed anymore
+EmailJS is a client-side email service -- its public key is designed to be used in frontend code, so it's safe to store directly in the codebase.
 
-## 2. Footer updates (3 changes)
-**File**: `src/components/layout/Footer.tsx`
+## What will change
 
-**2a. Remove "Experience" from navigation**
-- Delete line 7: `{ label: 'Experience', href: '#experience' },` from the `navLinks` array
+### Install `@emailjs/browser` package
+Add the EmailJS SDK dependency.
 
-**2b. Add location below "ARU" brand**
-- Add a `<p>` with `MapPin` icon and city text (`config?.personal.city || 'Pune, India'`) below the ARU logo link (after line 23)
-- Add `MapPin` and `Mail` to the lucide-react imports
+### Update `src/components/sections/Contact.tsx`
+- Import `emailjs` from `@emailjs/browser`
+- Replace the current Formspree/mailto logic in `handleSubmit` with `emailjs.sendForm()` using your credentials:
+  - Service ID: `service_5zvm1pi`
+  - Template ID: `template_cnu08xj`
+  - Public Key: `euVOrR_3cpj8GUt4m`
+- Add loading state and error handling with a toast notification
+- On success: show the "Message Sent!" confirmation
+- On failure: show an error toast so the user knows something went wrong
 
-**2c. Replace Twitter with Email in social section**
-- Remove the Twitter `<a>` block (lines 56-59)
-- Add a mailto link with `Mail` icon: `<a href="mailto:ankurujawane@gmail.com">` with the same styling as other social icons
-- Remove `Twitter` from imports, add `Mail` to imports
+### EmailJS Template Requirements
+Your EmailJS template must use these template variables (matching the form field `name` attributes):
+- `{{name}}` -- sender's name
+- `{{email}}` -- sender's email
+- `{{message}}` -- the message content
 
-## 3. Remove contact info block from Contact section
-**File**: `src/components/sections/Contact.tsx`
-- Delete the entire `<ScrollReveal delay={0.2}>` block (lines 81-104) containing MapPin, Mail, GitHub, and LinkedIn
-- Clean up unused imports: remove `MapPin`, `Mail`, `Github`, `Linkedin` from lucide-react imports
+Make sure your template on the EmailJS dashboard uses these exact variable names, or the fields won't populate in the email you receive.
 
----
+## Technical Details
 
-## Summary of file changes
+The `handleSubmit` function will be rewritten to:
 
-| File | What changes |
-|------|-------------|
-| `src/components/sections/Hero.tsx` | Remove buttons block (lines 64-74), clean imports |
-| `src/components/layout/Footer.tsx` | Remove Experience nav link; add location below ARU; swap Twitter for Email icon |
-| `src/components/sections/Contact.tsx` | Remove info/social links block (lines 81-104), clean imports |
+```typescript
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setLoading(true);
+  try {
+    await emailjs.sendForm(
+      'service_5zvm1pi',
+      'template_cnu08xj',
+      e.currentTarget,
+      'euVOrR_3cpj8GUt4m'
+    );
+    setSubmitted(true);
+    toast({ title: "Message sent!", description: "I'll get back to you soon." });
+  } catch (error) {
+    toast({ title: "Failed to send", description: "Please try again.", variant: "destructive" });
+  } finally {
+    setLoading(false);
+  }
+};
+```
+
+## Files modified
+| File | Change |
+|------|--------|
+| `package.json` | Add `@emailjs/browser` dependency |
+| `src/components/sections/Contact.tsx` | Replace Formspree/mailto with EmailJS integration, add loading/error states |
 
