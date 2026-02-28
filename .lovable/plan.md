@@ -1,66 +1,39 @@
 
 
-# Fix Multiple UI Issues
+# UI Fixes: Hero Buttons, Footer & Contact Cleanup
 
-## 1. Name visibility in light mode
-The name (`h1`) in Hero uses default `text-foreground` which in light mode is `260 40% 10%` (dark purple) -- should be visible. The issue is likely the name blending with the light background. Add a subtle text shadow or ensure the name explicitly uses a dark color in light mode without changing the overall design.
-
+## 1. Remove "Get in Touch" and "View Projects" buttons from Hero
 **File**: `src/components/sections/Hero.tsx`
-- Add a `text-shadow` or `drop-shadow` class to the `h1` so it stands out against both light and dark backgrounds
+- Delete lines 64-74 (the `<div className="flex flex-wrap justify-center gap-3">` block with both buttons)
+- Also remove the unused `Send` import from lucide-react and `Button` import since they won't be needed anymore
 
-## 2. Mobile header layout fix
-Currently on mobile, the hamburger menu is on the right (inside the Actions div) alongside the theme toggle and download button -- all bunched together.
-
-**File**: `src/components/layout/Header.tsx`
-- Move the hamburger button OUT of the actions div
-- Place it as the first element in the nav (far left) on mobile, hidden on desktop
-- Keep download + theme toggle in the right-side actions div
-- Use `order` or restructure the flex layout for mobile only
-
-Proposed mobile layout:
-```text
-[Hamburger]          [Download] [Theme Toggle]
-```
-
-Desktop stays unchanged (hamburger hidden, nav links in center, actions on right).
-
-## 3. "Robotics Enthusiast" visibility in dark mode
-The subtitle uses `text-primary` class. In dark mode, primary is `270 85% 65%` which may not contrast well. Increase its opacity or brightness slightly, or add a subtle glow/text-shadow so it pops in dark mode.
-
-**File**: `src/components/sections/Hero.tsx`
-- Add a `drop-shadow` or slight `text-shadow` with neon glow to the subtitle `<motion.p>` element
-
-## 4. Remove "Get in Touch" and "View Projects" buttons from Hero
-**File**: `src/components/sections/Hero.tsx`
-- Delete the `<div className="flex flex-wrap justify-center gap-3">` block (lines 64-74) containing the two buttons
-
-## 5. Footer and Contact section updates
-Multiple changes across Footer and Contact:
-
-### 5a. Remove "Experience" from footer navigation
+## 2. Footer updates (3 changes)
 **File**: `src/components/layout/Footer.tsx`
-- Remove `{ label: 'Experience', href: '#experience' }` from the `navLinks` array
 
-### 5b. Remove email, GitHub, LinkedIn, and location from below "Get in Touch" in Contact
+**2a. Remove "Experience" from navigation**
+- Delete line 7: `{ label: 'Experience', href: '#experience' },` from the `navLinks` array
+
+**2b. Add location below "ARU" brand**
+- Add a `<p>` with `MapPin` icon and city text (`config?.personal.city || 'Pune, India'`) below the ARU logo link (after line 23)
+- Add `MapPin` and `Mail` to the lucide-react imports
+
+**2c. Replace Twitter with Email in social section**
+- Remove the Twitter `<a>` block (lines 56-59)
+- Add a mailto link with `Mail` icon: `<a href="mailto:ankurujawane@gmail.com">` with the same styling as other social icons
+- Remove `Twitter` from imports, add `Mail` to imports
+
+## 3. Remove contact info block from Contact section
 **File**: `src/components/sections/Contact.tsx`
-- Remove the entire `ScrollReveal delay={0.2}` block (lines 81-104) that contains MapPin, Mail, GitHub, and LinkedIn links
-
-### 5c. Move location below "ARU" in Footer
-**File**: `src/components/layout/Footer.tsx`
-- Add a `<p>` with MapPin icon and city text below the "ARU" brand logo
-
-### 5d. Remove Twitter, add Email icon in Footer social section
-**File**: `src/components/layout/Footer.tsx`
-- Remove the Twitter `<a>` block
-- Add a `<a href="mailto:...">` with `Mail` icon from lucide-react
+- Delete the entire `<ScrollReveal delay={0.2}>` block (lines 81-104) containing MapPin, Mail, GitHub, and LinkedIn
+- Clean up unused imports: remove `MapPin`, `Mail`, `Github`, `Linkedin` from lucide-react imports
 
 ---
 
-## Files to modify
-| File | Changes |
-|------|---------|
-| `src/components/sections/Hero.tsx` | Add text shadow to name + subtitle; remove buttons |
-| `src/components/layout/Header.tsx` | Restructure mobile layout (hamburger left, actions right) |
-| `src/components/layout/Footer.tsx` | Remove Experience link; remove Twitter, add Email; add location below ARU |
-| `src/components/sections/Contact.tsx` | Remove the info/social links block below the form |
+## Summary of file changes
+
+| File | What changes |
+|------|-------------|
+| `src/components/sections/Hero.tsx` | Remove buttons block (lines 64-74), clean imports |
+| `src/components/layout/Footer.tsx` | Remove Experience nav link; add location below ARU; swap Twitter for Email icon |
+| `src/components/sections/Contact.tsx` | Remove info/social links block (lines 81-104), clean imports |
 
